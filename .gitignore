@@ -1,0 +1,43 @@
+# Build directories
+build/
+install/
+log/
+docs/
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+*.cmake
+
+# Compiled files
+*.o
+*.so
+*.a
+*.exe
+*.out
+
+
+# IDE specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ROS specific
+.catkin_workspace
+devel/
+logs/
+bin/
+lib/
+msg_gen/
+srv_gen/
+ament_
