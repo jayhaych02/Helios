@@ -1,4 +1,4 @@
-# Helios Swarm Robotics Disaster Recovery & High-Risk Situation Simulation Learning Tool
+# Helios Multi-Robot/Swarm Robotics Disaster Recovery & High-Risk Situation Simulation Learning Tool
 
 ## Linux Installation
 1. mkdir robotics & cd robotics
