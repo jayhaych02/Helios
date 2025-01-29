@@ -1,0 +1,7 @@
+2025-01-29 10:38:06 - [0;34mINFO: Starting Git LFS installation...[0m
+2025-01-29 10:38:06 - [0;34mINFO: Installing Git LFS...[0m
+2025-01-29 10:38:55 - [0;32mSUCCESS: Git LFS installation completed[0m
+2025-01-29 10:38:55 - [0;34mINFO: Configuring Git LFS file tracking...[0m
+2025-01-29 10:38:58 - [0;32mSUCCESS: Git LFS tracking configured[0m
+2025-01-29 10:38:58 - [0;32mSUCCESS: Git LFS setup completed successfully![0m
+2025-01-29 10:38:58 - [0;34mINFO: Check /home/jaych/robotics/helios/git_lfs_installation.log for detailed installation logs[0m
