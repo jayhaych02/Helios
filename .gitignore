@@ -4,6 +4,9 @@ install/
 log/
 docs/
 
+# install script log files
+.log
+
 # CMake generated files
 CMakeFiles/
 CMakeCache.txt
