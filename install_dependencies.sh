@@ -178,6 +178,51 @@ install_ros2() {
     log_success "ROS2 ${ROS_DISTRO^} installation completed"
 }
 
+
+# Install Gazebo Fortress. EOL September 2026 for ROS2 Humble on Ubuntu 22.04 LTS
+install_gazebo_fortress() {
+    log_info "Installing Gazebo Fortress..."
+
+    # Check if Gazebo Fortress is already installed
+    if dpkg -l | grep -q "ignition-fortress"; then
+        log_warning "Gazebo Fortress appears to be already installed"
+        return 0
+    fi
+
+    # Install prerequisites
+    if ! sudo apt-get install -y lsb-release gnupg; then
+        log_error "Failed to install Gazebo Fortress prerequisites"
+        exit 1
+    fi
+
+    # Add Gazebo repository key
+    if ! sudo curl https://packages.osrfoundation.org/gazebo.gpg --output /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg; then
+        log_error "Failed to download Gazebo GPG key"
+        exit 1
+    fi
+
+    # Add Gazebo repository
+    if ! echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null; then
+        log_error "Failed to add Gazebo repository"
+        exit 1
+    fi
+
+    # Update package lists
+    if ! sudo apt-get update; then
+        log_error "Failed to update package lists after adding Gazebo repository"
+        exit 1
+    fi
+
+    # Install Gazebo Fortress
+    if ! sudo apt-get install -y ignition-fortress; then
+        log_error "Failed to install Gazebo Fortress"
+        exit 1
+    fi
+
+    log_success "Gazebo Fortress installation completed"
+}
+
+
 # Install development tools and dependencies
 install_dependencies() {
     log_info "Installing development tools and dependencies..."
@@ -266,6 +311,45 @@ configure_environment() {
     log_success "Environment configuration completed"
 }
 
+# Configure WSL2 graphics settings
+configure_wsl_graphics() {
+    log_info "Configuring WSL2 graphics settings..."
+
+    # Install VcXsrv using winget if in WSL
+    if grep -qi microsoft /proc/version; then
+        log_info "WSL2 detected. Installing VcXsrv..."
+        if ! powershell.exe winget install marha.VcXsrv; then
+            log_warning "Failed to install VcXsrv. Please install it manually from: https://sourceforge.net/projects/vcxsrv/"
+        fi
+    fi
+
+    local bashrc="${HOME}/.bashrc"
+
+    # Add WSL2 graphics configuration if not already present
+    if ! grep -q "# WSL2 graphics configuration" "${bashrc}"; then
+        {
+            echo -e "\n# WSL2 graphics configuration"
+            echo "export DISPLAY=:0"
+            echo "export LIBGL_ALWAYS_SOFTWARE=1"
+            echo "export MESA_GL_VERSION_OVERRIDE=3.3"
+            echo "export GZ_GPU_ASYNC=1"
+        } >> "${bashrc}" || {
+            log_error "Failed to add WSL2 graphics configuration to .bashrc"
+            exit 1
+        }
+    fi
+
+    # Fix runtime directory permissions
+    if [[ -d "/run/user/$(id -u)" ]]; then
+        if ! sudo chmod 0700 "/run/user/$(id -u)"; then
+            log_warning "Failed to set runtime directory permissions. Some graphical applications might not work correctly."
+        fi
+    fi
+
+    log_success "WSL2 graphics configuration completed"
+}
+
+
 # Main installation process
 main() {
     # Clear or create new log file
@@ -279,7 +363,7 @@ main() {
     echo -e "${YELLOW}This script will install ROS2 ${ROS_DISTRO^} and set up your workspace.${NC}"
     echo -e "${YELLOW}Please make sure you have:"
     echo "  - At least 10GB of free disk space"
-    echo "  - A stable internet connection"
+    echo "  - A STABLE internet connection"
     echo "  - Ubuntu ${REQUIRED_UBUNTU_VERSION} installed${NC}"
     echo -e "\nPress [ENTER] to continue or [CTRL+C] to cancel"
     read -r
@@ -289,13 +373,17 @@ main() {
     setup_directories
     check_system_requirements
     install_ros2
+    install_gazebo_fortress
     install_dependencies
     setup_workspace
     configure_environment
+    configure_wsl_graphics    
 
     log_success "Installation completed successfully!"
     log_info "Please run: source ~/.bashrc"
+    log_info "For WSL2 users: Install VcXsrv on Windows and launch it before running Gazebo"
     log_info "Check ${LOG_FILE} for detailed installation logs"
+
 }
 
 # Run main function
