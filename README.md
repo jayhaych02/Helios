@@ -16,7 +16,6 @@
 4. The output is a basic ROS example of Publishing & Subscribing 
 
 
-
 ## Install Git LFS
 ### Reasoning : Large codebases will have large files that require lots of space to store. Github by itself isn't able to store them.
 ### git lfs is an open source Git extension that helps Git repositories manage large binary files efficiently.
@@ -31,7 +30,13 @@
 ## Windows VcXsrv : Allows Windows GUI Applications to Function
 ### https://www.lenovo.com/us/en/glossary/vcxsrv/
 
-# Documentation : Doxygen
+
+# Running Gazebo : After installation scripts have been completed successfully
+1. In the Terminal Run : ign gazebo  
+2. Select a prebuilt Gazebo Fortress World to mess around with
+
+# Documentation : Doxygen. Coming Soon...
+
 
 ## Next Steps : Creating ROS Packages for major Robot Functionality
 1. cd to the /helios/src directory
