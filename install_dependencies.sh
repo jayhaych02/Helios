@@ -236,6 +236,7 @@ install_dependencies() {
         "libgmock-dev"
         "python3-pytest"
         "git"
+        "net-tools"
     )
 
     for package in "${dev_packages[@]}"; do
