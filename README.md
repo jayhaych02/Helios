@@ -8,7 +8,7 @@ mkdir robotics && cd robotics
 
 2. Clone this repository with its submodules:
 ```bash
-git clone --recurse-submodules https://github.com/YOUR_USERNAME/Helios.git
+git clone --recurse-submodules https://github.com/jayhaych02/Helios.git
 ```
    - If you already cloned without `--recurse-submodules`, run:
      ```bash
