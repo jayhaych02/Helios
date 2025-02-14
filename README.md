@@ -51,7 +51,16 @@ chmod +x install_dependencies.sh
 1. In the Terminal Run : ign gazebo  
 2. Select a prebuilt Gazebo Fortress World to mess around with
 
-# Documentation : Doxygen. Coming Soon...
+# Documentation : Doxygen
+### In the " ~/robotics/Helios/docs " folder lives doxygen documentation generation "Doxyfile" with folders html and latex
+
+## To view Doxygen Documentation
+1. sudo apt install doxygen
+2. cd ~/robotics/Helios/docs
+3. Run " python3 -m http.server 8000 "
+4. Paste the port " http://localhost:8000/" into the browser or open the port while inside of WSL VsCode
+
+ 
 
 ## Next Steps : Creating ROS Packages for major Robot Functionality
 1. cd to the /helios/src directory
