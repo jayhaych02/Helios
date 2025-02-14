@@ -62,8 +62,3 @@ chmod +x install_dependencies.sh
 
  
 
-## Next Steps : Creating ROS Packages for major Robot Functionality
-1. cd to the /helios/src directory
-2. ros2 pkg create --build-type ament_cmake <package_name>
-3. Package workflow is : (1) Code a .cpp source file (2) Edit the CMakeLists.txt (3) Edit the package.xml (4) Colcon build
-
