@@ -41,15 +41,15 @@ chmod +x install_dependencies.sh
 
 # GUI Tools Installed : Gazebo & Windows VcXsrv
 
-## Gazebo : "Gazebo Fortress". ROS2 Humble EOL September 2026. Documentation Referenced:
-###  https://gazebosim.org/docs/fortress/install_ubuntu/  and https://gazebosim.org/docs/fortress/getstarted/
+## Gazebo : "Gazebo Ionic". ROS2 Humble EOL September 2026. Documentation Referenced:
+### https://gazebosim.org/docs/ionic/install_ubuntu/
 
-## Windows VcXsrv : Allows Windows GUI Applications to Function
+## Windows VcXsrv : Allows Windows GUI Applications like Gazebo to function while using WSL
 ### https://www.lenovo.com/us/en/glossary/vcxsrv/
 
 # Running Gazebo : After installation scripts have been completed successfully
-1. In the Terminal Run : ign gazebo  
-2. Select a prebuilt Gazebo Fortress World to mess around with
+1. In the Terminal Run : gz sim  
+2. Select a prebuilt Gazebo Ionic World to mess around with
 
 # Documentation : Doxygen
 ### In the " ~/robotics/Helios/docs " folder lives doxygen documentation generation "Doxyfile" with folders html and latex
