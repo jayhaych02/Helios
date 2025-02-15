@@ -237,6 +237,8 @@ install_dependencies() {
         "python3-pytest"
         "git"
         "net-tools"
+        "sqlite3"
+        "sqlitebrowser"
     )
 
     for package in "${dev_packages[@]}"; do
