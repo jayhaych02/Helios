@@ -239,6 +239,11 @@ install_dependencies() {
         "net-tools"
         "sqlite3"
         "sqlitebrowser"
+        "ros-humble-robot-state-publisher"
+        "ros-humble-xacro"
+        "ros-humble-tf2-tools"
+        "ros-humble-tf2-ros"
+        
     )
 
     for package in "${dev_packages[@]}"; do
