@@ -2,18 +2,14 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>helios_description</name>
-  <version>0.0.0</version>
-  <description>Robot description package for Helios swarm robotics platform</description>
-  <maintainer email="your.email@example.com">Jaden Howard</maintainer>
-  <license>TODO: License declaration</license>
+  <version>0.0.1</version>
+  <description>Robot description for Helios firefighting robot</description>
+  <maintainer email="your@email.com">Your Name</maintainer>
+  <license>TODO</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
-
-  <depend>xacro</depend>
-  <depend>urdf</depend>
-
-  <test_depend>ament_lint_auto</test_depend>
-  <test_depend>ament_lint_common</test_depend>
+  <exec_depend>xacro</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

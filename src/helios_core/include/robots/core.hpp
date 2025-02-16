@@ -28,11 +28,13 @@ typedef struct{
 }Robot_Attributes_t;
 
 using StringPublisher = rclcpp::Publisher<std_msgs::msg::String>::SharedPtr;
+using StringSubscriber = rclcpp::Subscription<std_msgs::msg::String>::SharedPtr;
 using TwistPublisher = rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr;
+using TwistSubscriber = rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr;
+
 using LidarSubscriberTwoDimensions = rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr;
 
 /* 
 1.) ROS2 msg PointCloud2 represents 3D Lidar apparently
 2.) Use OpenCV 
-
 */
