@@ -62,7 +62,8 @@ chmod +x install_dependencies.sh
 
  
 
-# Helios Multi-Robot/Swarm Robotics Disaster Recovery & High-Risk Situation Simulation Learning Tool
+# Demos
+
 
 ![Gazebo Demonstration](./GazeboRunning.png)
 
