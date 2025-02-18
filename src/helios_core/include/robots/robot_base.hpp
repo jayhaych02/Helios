@@ -3,7 +3,7 @@
  * @details virtual void functions - Must be implemented by derived classes
  * @details virtual void implementations - CAN be overridden by derived classes
  * @details Non-virtual functions - common to all robots
-
+ * @todo Implement specific robot classes to determine what's needed in this class as well
  */
 #pragma once
 #include "core.hpp"
@@ -22,11 +22,16 @@ public:
     virtual void processEnvironmentData() = 0;        
     virtual bool checkTaskCompletion() = 0;          
 
+    /**
+     * @brief Robot's at their core in ROS need a Twist command to move.
+     */
     virtual void move(const geometry_msgs::msg::Twist& cmd) {
         pub_cmd_vel->publish(cmd);
     }
 
-    //if the robot received a msg to stop operations, cease all movement
+    /**
+     * @brief if the robot received a msg to stop operations from a central control center, cease all movement
+     */
     virtual void stop(const std::string& stop_msg) {
         if( strcmp(stop_msg,"stop operations") == 0 )
         auto stop_cmd = geometry_msgs::msg::Twist();
@@ -38,7 +43,9 @@ public:
         stop_cmd.angular.z = 0;
         pub_cmd_vel->publish(stop_cmd);
     }
-
+    /**
+     * @brief Each robot should report its status as a string to central control center
+     */
     void reportStatus(const std::string& status) {
         auto msg = std_msgs::msg::String();
         msg.data = status;
