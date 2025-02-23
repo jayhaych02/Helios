@@ -388,7 +388,7 @@ main() {
     configure_wsl_graphics    
 
     log_success "Installation completed successfully!"
-    log_info "Please run: source ~/.bashrc"
+    log_info "Please run: source ~/.bashrc while INSIDE YOUR HOME DIRECTORY or you may encounter errors when testing ROS nodes"
     log_info "For WSL2 users: Install VcXsrv on Windows and launch it before running Gazebo"
     log_info "Check ${LOG_FILE} for detailed installation logs"
 
