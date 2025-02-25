@@ -11,10 +11,16 @@
 class Robot_Base : public rclcpp::Node{
     
 protected:
-    StringPublisher pub_status;
-    TwistPublisher pub_cmd_vel;
-    LidarSubscriberTwoDimensions sub_lidar;
 
+    ROBOT_ATTRIBUTES_t robot_attributes;
+    StringPublisher broadcast_status;
+    LidarSubscriberTwoDimensions sub_lidar;
+    OdomPublisher pub_raw_odom;
+    ImageSubscriber sub_depth_camera;
+    Float64Subscriber sub_gas_sensor;
+    ImageSubscriber sub_thermal_camera;
+
+    
 public:
     virtual void initialize() = 0;                     
     virtual void executeTask() = 0;                    
@@ -22,12 +28,6 @@ public:
     virtual void processEnvironmentData() = 0;        
     virtual bool checkTaskCompletion() = 0;          
     
-    /**
-     * @brief Robot's at their core in ROS need a Twist command in order to move
-     */
-    virtual void move(const geometry_msgs::msg::Twist& cmd) {
-        pub_cmd_vel->publish(cmd);
-    }
 
     /**
      * @brief if the robot received a msg to stop operations from the Central Control Server, cease all movement
