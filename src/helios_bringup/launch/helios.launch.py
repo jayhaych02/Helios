@@ -5,7 +5,7 @@ from launch_ros.actions import Node
 def generate_launch_description():
    return LaunchDescription([
        Node(
-           package='helios_testing',
+           package='helios_tests',
            executable='test_unity_node',
            name='unity_test_pub',
            output='screen',

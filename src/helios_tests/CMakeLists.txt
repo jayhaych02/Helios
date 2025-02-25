@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(helios_testing)
+project(helios_tests)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

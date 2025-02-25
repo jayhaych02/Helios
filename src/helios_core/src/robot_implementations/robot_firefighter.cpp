@@ -1,4 +1,5 @@
-class RobotFireFighter : public rclcpp::Node(){
+
+class RobotFireFighter : public Robot_Base{
 
 public:
     RobotFireFighter()
