@@ -11,7 +11,6 @@
 class Robot_Base : public rclcpp::Node{
     
 protected:
-
     ROBOT_ATTRIBUTES_t robot_attributes;
     StringPublisher broadcast_status;
     LidarSubscriberTwoDimensions sub_lidar;
@@ -20,7 +19,6 @@ protected:
     Float64Subscriber sub_gas_sensor;
     ImageSubscriber sub_thermal_camera;
 
-    
 public:
     virtual void initialize() = 0;                     
     virtual void executeTask() = 0;                    
