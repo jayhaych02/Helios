@@ -24,10 +24,10 @@ typedef struct{
     std::string robot_type;        // Type of robot (scout, firefighter, etc)
     std::string robot_id;          // Unique identifier 
     bool is_active = false;        // Robot operational status
-    double battery_level = 100.0;  // Battery percentage
-    double position_x = 0.0;
-    double position_y = 0.0;
-    double theta = 0.0;
+    double x_pos;
+    double y_pos;
+    double theta;                   //Orientation
+    std::array<double> robot_pose = {x_pos , y_pos , theta};// idk 
 }ROBOT_ATTRIBUTES_t;
 
 using StringPublisher = rclcpp::Publisher<std_msgs::msg::String>::SharedPtr;
