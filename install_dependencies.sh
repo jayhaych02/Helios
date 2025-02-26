@@ -179,24 +179,24 @@ install_ros2() {
 }
 
 
-# Install Gazebo Fortress. EOL September 2026 for ROS2 Humble on Ubuntu 22.04 LTS
-install_gazebo_fortress() {
-    log_info "Installing Gazebo Fortress..."
+# Install Gazebo Ionic. Supported Sep, 2024 to Sep, 2026
+install_gazebo_ionic() {
+    log_info "Installing Gazebo Ionic..."
 
-    # Check if Gazebo Fortress is already installed
-    if dpkg -l | grep -q "ignition-fortress"; then
-        log_warning "Gazebo Fortress appears to be already installed"
+    # Check if Gazebo Ionic is already installed
+    if dpkg -l | grep -q "gz-ionic"; then
+        log_warning "Gazebo Ionic appears to be already installed"
         return 0
     fi
 
     # Install prerequisites
     if ! sudo apt-get install -y lsb-release gnupg; then
-        log_error "Failed to install Gazebo Fortress prerequisites"
+        log_error "Failed to install Gazebo Ionic prerequisites"
         exit 1
     fi
 
     # Add Gazebo repository key
-    if ! sudo curl https://packages.osrfoundation.org/gazebo.gpg --output /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg; then
+    if ! sudo curl -sSL https://packages.osrfoundation.org/gazebo.gpg --output /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg; then
         log_error "Failed to download Gazebo GPG key"
         exit 1
     fi
@@ -213,13 +213,13 @@ install_gazebo_fortress() {
         exit 1
     fi
 
-    # Install Gazebo Fortress
-    if ! sudo apt-get install -y ignition-fortress; then
-        log_error "Failed to install Gazebo Fortress"
+    # Install Gazebo Ionic
+    if ! sudo apt-get install -y gz-ionic; then
+        log_error "Failed to install Gazebo Ionic"
         exit 1
     fi
 
-    log_success "Gazebo Fortress installation completed"
+    log_success "Gazebo Ionic installation completed"
 }
 
 
@@ -227,8 +227,26 @@ install_gazebo_fortress() {
 install_dependencies() {
     log_info "Installing development tools and dependencies..."
 
+    # Install Python3 pip first
+    log_info "Installing Python3 pip..."
+    if ! sudo apt-get install -y python3-pip; then
+        log_error "Failed to install python3-pip"
+        exit 1
+    fi
+
+    # Install rosdep via pip if apt installation fails
+    log_info "Installing python3-rosdep..."
+    if ! sudo apt-get install -y python3-rosdep; then
+        log_warning "Failed to install python3-rosdep via apt. Attempting installation via pip..."
+        if ! pip3 install rosdep; then
+            log_error "Failed to install rosdep via pip"
+            exit 1
+        else
+            log_success "Successfully installed rosdep via pip"
+        fi
+    fi
+
     local dev_packages=(
-        "python3-rosdep"
         "python3-colcon-common-extensions"
         "python3-vcstool"
         "build-essential"
@@ -381,7 +399,7 @@ main() {
     setup_directories
     check_system_requirements
     install_ros2
-    install_gazebo_fortress
+    install_gazebo_ionic
     install_dependencies
     setup_workspace
     configure_environment
