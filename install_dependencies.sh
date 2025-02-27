@@ -294,14 +294,6 @@ setup_workspace() {
         log_error "Failed to create workspace src directory"
         exit 1
     fi
-
-    # Initialize workspace with rosdep
-    cd "${SCRIPT_DIR}" || exit 1
-    if ! rosdep install --from-paths src --ignore-src -r -y; then
-        log_error "Failed to install workspace dependencies"
-        exit 1
-    fi
-
     log_success "Workspace setup completed"
 }
 
