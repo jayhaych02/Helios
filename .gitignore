@@ -44,3 +44,10 @@ lib/
 msg_gen/
 srv_gen/
 ament_
+
+
+# prevent git issues from occurring...
+GazeboRunning.png
+git_lfs_installation.log
+installation.log
+ROS2Architecture.png
