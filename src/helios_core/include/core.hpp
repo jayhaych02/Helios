@@ -26,8 +26,8 @@ typedef struct{
     bool is_active = false;        // Robot operational status
     double x_pos;
     double y_pos;
-    double theta;                   //Orientation
-    std::array<double> robot_pose = {x_pos , y_pos , theta};// idk 
+    double theta;                  
+    std::array<double> robot_pose = {x_pos , y_pos , theta}; 
 }ROBOT_ATTRIBUTES_t;
 
 using StringPublisher = rclcpp::Publisher<std_msgs::msg::String>::SharedPtr;
