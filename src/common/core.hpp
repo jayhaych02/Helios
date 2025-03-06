@@ -38,7 +38,3 @@ using LidarSubscriberTwoDimensions = rclcpp::Subscription<sensor_msgs::msg::Lase
 using ImageSubscriber = rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr;
 using Float64Subscriber = rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr;
 using OdomPublisher = rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr;
-/* 
-1.) ROS2 msg PointCloud2 represents 3D Lidar apparently
-2.) Use OpenCV 
-*/

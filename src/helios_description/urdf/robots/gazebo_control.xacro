@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="gazebo_control">
+    <!-- Gazebo required specifications -->
+    <gazebo>
+      <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+        <!-- Plugin update rate in Hz -->
+        <update_rate>100</update_rate>
+        
+        <!-- Wheel Information -->
+        <left_joint>left_wheel_joint</left_joint>
+        <right_joint>right_wheel_joint</right_joint>
+        <wheel_separation>0.4</wheel_separation>
+        <wheel_diameter>0.1</wheel_diameter>
+        
+        <!-- Limits -->
+        <max_wheel_torque>10</max_wheel_torque>
+        <max_wheel_acceleration>1.0</max_wheel_acceleration>
+        
+        <!-- Output -->
+        <command_topic>cmd_vel</command_topic>
+        <publish_odom>true</publish_odom>
+        <publish_odom_tf>true</publish_odom_tf>
+        <publish_wheel_tf>true</publish_wheel_tf>
+        
+        <odometry_topic>odom</odometry_topic>
+        <odometry_frame>odom</odometry_frame>
+        <robot_base_frame>base_link</robot_base_frame>
+      </plugin>
+    </gazebo>
+    
+    <!-- IMU sensor -->
+    <gazebo reference="base_link">
+      <sensor name="imu_sensor" type="imu">
+        <plugin name="imu_plugin" filename="libgazebo_ros_imu_sensor.so">
+          <ros>
+            <namespace>/helios</namespace>
+            <remapping>~/out:=imu</remapping>
+          </ros>
+          <initial_orientation_as_reference>false</initial_orientation_as_reference>
+        </plugin>
+        <always_on>true</always_on>
+        <update_rate>100</update_rate>
+        <visualize>true</visualize>
+      </sensor>
+    </gazebo>
+    
+    <!-- Material colors for Gazebo -->
+    <gazebo reference="base_link">
+      <material>Gazebo/Blue</material>
+    </gazebo>
+    
+    <gazebo reference="left_wheel">
+      <material>Gazebo/Black</material>
+      <mu1>1.0</mu1>
+      <mu2>1.0</mu2>
+    </gazebo>
+    
+    <gazebo reference="right_wheel">
+      <material>Gazebo/Black</material>
+      <mu1>1.0</mu1>
+      <mu2>1.0</mu2>
+    </gazebo>
+    
+    <gazebo reference="caster">
+      <material>Gazebo/Black</material>
+      <mu1>0.01</mu1>
+      <mu2>0.01</mu2>
+    </gazebo>
+    
+    <gazebo reference="sensor_mount">
+      <material>Gazebo/Grey</material>
+    </gazebo>
+  </xacro:macro>
+  
+</robot>
