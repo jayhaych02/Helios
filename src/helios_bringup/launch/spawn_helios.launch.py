@@ -57,7 +57,7 @@ def generate_launch_description():
         
     declare_use_gazebo_cmd = DeclareLaunchArgument(
         'use_gazebo',
-        default_value='False',
+        default_value='True',
         description='Whether to start Gazebo')
         
     declare_gui_cmd = DeclareLaunchArgument(
@@ -65,18 +65,17 @@ def generate_launch_description():
         default_value='True',
         description='Flag to enable joint_state_publisher_gui')
     
-    # Start Gazebo server
     start_gazebo_server_cmd = ExecuteProcess(
         condition=IfCondition(use_gazebo),
         cmd=['gz', 'sim', '-r', world_path],
         output='screen'
     )
 
-    # Start Gazebo client - Using direct command for Gazebo Garden
-    start_gazebo_client_cmd = ExecuteProcess(
-        condition=IfCondition(use_gazebo),
-        cmd=['gz', 'sim', '-g'],
-        output='screen'
+    # Start Gazebo client
+    start_gazebo_client_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([os.path.join(
+            get_package_share_directory('gazebo_ros'), 'launch', 'gzclient.launch.py')]),
+        condition=IfCondition(use_gazebo)
     )
     
     # Create the Robot State Publisher node
@@ -87,7 +86,6 @@ def generate_launch_description():
                     'use_sim_time': use_sim_time}]
     )
     
-    # Spawn entity using ros_gz_sim
     spawn_entity = Node(
         package='ros_gz_sim',
         executable='create',
