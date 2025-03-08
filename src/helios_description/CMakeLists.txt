@@ -14,20 +14,18 @@ find_package(xacro REQUIRED)
 
 # Install directories based on your structure
 install(DIRECTORY
-  launch
   meshes
   rviz
   urdf
-  worlds
+  scripts
   DESTINATION share/${PROJECT_NAME}
 )
 
-# Install Python modules
-ament_python_install_package(${PROJECT_NAME})
 
-# Install Python executables
+
+# Install  executables
 install(PROGRAMS
-  scripts/teleop_keyboard.py
+  scripts/teleop_keyboard.cpp
   DESTINATION lib/${PROJECT_NAME}
 )
 

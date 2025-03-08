@@ -10,6 +10,7 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_gtest REQUIRED)
+find_package(ament_cmake_gmock REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
@@ -28,11 +29,11 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-# Add kinematics test - include the actual implementation directly
-ament_add_gtest(test_kinematics 
+ament_add_gmock(test_kinematics 
   src/test_kinematics.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../helios_core/include/utils_kinematics/robot_kinematics.cpp  
 )
+
 
 target_link_libraries(test_kinematics
   ${rclcpp_LIBRARIES}
