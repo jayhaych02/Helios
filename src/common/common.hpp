@@ -19,6 +19,22 @@
 #include <Eigen/Dense> 
 #include <geometry_msgs/msg/twist.hpp>
 #include <list>
+#include <rcl_interfaces/msg/parameter.hpp>
+#include <rcl_interfaces/msg/set_parameters_result.hpp>
+#include "std_msgs/msg/bool.hpp"
+#include "rcl_interfaces/msg/parameter_event.hpp"
+#include "rcl_interfaces/srv/set_parameters.hpp"  
+#include "rcl_interfaces/msg/parameter_descriptor.hpp"
+#include <std_srvs/srv/trigger.hpp>
+#include "nav_msgs/msg/odometry.hpp"
+#include "geometry_msgs/msg/pose_array.hpp"
+#include <cmath>
+#include <random>
+#include <nav2_msgs/action/navigate_to_pose.hpp>
+#include <rclcpp_action/rclcpp_action.hpp>
+#include <geometry_msgs/msg/pose_stamped.hpp>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
+
 
 using StringPublisher = rclcpp::Publisher<std_msgs::msg::String>::SharedPtr;
 using StringSubscriber = rclcpp::Subscription<std_msgs::msg::String>::SharedPtr;
@@ -31,12 +47,9 @@ using OdomPublisher = rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr;
 
 
 
-
-
-
-
 /**
  * @brief Robot_Base class required variables that child classes must define/use
+ * @note This implementation is NOT set in stone whatsoever. Will code and determine if this is even necessary
 */
 typedef struct{
     std::string robot_type;        // Type of robot (scout, firefighter, etc)

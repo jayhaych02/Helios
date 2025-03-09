@@ -1,16 +1,19 @@
+/**
+ * @brief Kinematics for Wheel Odometry
+ * @note Helios will use 2 types of Odometry : (1) Motion Model & (2) Laser 
+ * @note Look at Mobile Robotics repo for Wheel Odometry 
+ * @link https://github.com/jayhaych02/MobileRobotics/blob/c32c7504e9cbf0e30fd8f85f20ec760d898229be/src/wheel_odometry/src/wheel_odometry/wheel_odometry.py#L21
+ * @note Using Wheel Odom is still on the table, but looking like the other 2 are more robust
+ * 
+ */
+
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/joint_state.hpp"
 #include <array>
 #include <cmath>
+#include "robot_kinematics.hpp"
 
 namespace helios_kinematics {
-
-// Indexing values
-constexpr int LEFT = 0;
-constexpr int RIGHT = 1;
-constexpr int X = 0;
-constexpr int Y = 1;
-constexpr int THETA = 2;
 
 /**
  * @brief Calculate wheel angle changes and time delta

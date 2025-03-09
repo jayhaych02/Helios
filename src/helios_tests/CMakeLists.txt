@@ -30,7 +30,7 @@ include_directories(
 )
 
 ament_add_gmock(test_kinematics 
-  src/test_kinematics.cpp
+  src/unit_tests/odometry/test_wheel_odom_kinematics.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../helios_core/include/utils_kinematics/robot_kinematics.cpp  
 )
 
