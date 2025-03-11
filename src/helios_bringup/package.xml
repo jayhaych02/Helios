@@ -17,7 +17,6 @@
   <depend>ros_gz_bridge</depend>
   <exec_depend>launch</exec_depend>
   <exec_depend>launch_ros</exec_depend>
-  <exec_depend>gazebo_ros</exec_depend>
   <exec_depend>helios_description</exec_depend>
   <exec_depend>ros2launch</exec_depend>
   <exec_depend>helios_testing</exec_depend>

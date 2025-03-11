@@ -10,15 +10,13 @@ from launch.substitutions import Command, LaunchConfiguration, PythonExpression
 from launch_ros.actions import Node
 
 def generate_launch_description():
-    # Get the launch directory
     pkg_share = get_package_share_directory('helios_description')
+    world_share = get_package_share_directory('helios_bringup')
     
-    # Define paths based on your directory structure
     default_model_path = os.path.join(pkg_share, 'urdf/robots/helios.urdf.xacro')
     default_rviz_config_path = os.path.join(pkg_share, 'rviz/urdf_config.rviz')
-    world_path = os.path.join(pkg_share, 'worlds/empty_world.world')
+    world_path = os.path.join(world_share, 'worlds/tree_world.world')
     
-    # Launch configuration variables specific to simulation
     gui = LaunchConfiguration('gui')
     model = LaunchConfiguration('model')
     rviz_config_file = LaunchConfiguration('rviz_config_file')
@@ -27,7 +25,6 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time')
     use_gazebo = LaunchConfiguration('use_gazebo')
     
-    # Declare the launch arguments
     declare_model_path_cmd = DeclareLaunchArgument(
         'model',
         default_value=default_model_path,
@@ -45,7 +42,7 @@ def generate_launch_description():
         
     declare_use_rviz_cmd = DeclareLaunchArgument(
         'use_rviz',
-        default_value='True',
+        default_value='False',
         description='Whether to start RVIZ')
         
     declare_use_sim_time_cmd = DeclareLaunchArgument(
@@ -63,20 +60,13 @@ def generate_launch_description():
         default_value='True',
         description='Flag to enable joint_state_publisher_gui')
     
-    start_gazebo_server_cmd = ExecuteProcess(
+    # Single gazebo command that starts both server and client
+    start_gazebo_cmd = ExecuteProcess(
         condition=IfCondition(use_gazebo),
-        cmd=['gz', 'sim', '-r', world_path],
+        cmd=['gz', 'sim', world_path],
         output='screen'
     )
-
-    # Start Gazebo client
-    start_gazebo_client_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory('gazebo_ros'), 'launch', 'gzclient.launch.py')]),
-        condition=IfCondition(use_gazebo)
-    )
     
-    # Create the Robot State Publisher node
     robot_state_publisher_node = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -92,7 +82,6 @@ def generate_launch_description():
         output='screen'
     )
     
-    # Joint state publisher node
     joint_state_publisher_node = Node(
         package='joint_state_publisher',
         executable='joint_state_publisher',
@@ -100,7 +89,6 @@ def generate_launch_description():
         condition=IfCondition(PythonExpression(['not ', gui]))
     )
     
-    # Joint state publisher gui node
     joint_state_publisher_gui_node = Node(
         package='joint_state_publisher_gui',
         executable='joint_state_publisher_gui',
@@ -108,7 +96,6 @@ def generate_launch_description():
         condition=IfCondition(gui)
     )
     
-    # RVIZ
     rviz_node = Node(
         package='rviz2',
         executable='rviz2',
@@ -118,7 +105,6 @@ def generate_launch_description():
         condition=IfCondition(use_rviz)
     )
     
-    # Define a simple teleop node for keyboard control
     teleop_node = Node(
         package='helios_description',
         executable='teleop_keyboard.py',
@@ -126,7 +112,6 @@ def generate_launch_description():
         output='screen'
     )
     
-    # Return the LaunchDescription
     return LaunchDescription([
         declare_model_path_cmd,
         declare_rviz_config_file_cmd,
@@ -136,11 +121,8 @@ def generate_launch_description():
         declare_use_gazebo_cmd,
         declare_gui_cmd,
         
-        # Start Gazebo
-        start_gazebo_server_cmd,
-        start_gazebo_client_cmd,
+        start_gazebo_cmd,
         
-        # Launch robot components
         joint_state_publisher_node,
         joint_state_publisher_gui_node,
         robot_state_publisher_node,

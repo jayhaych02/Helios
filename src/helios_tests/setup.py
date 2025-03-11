@@ -20,6 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'test_unity_node = helios_tests.test_unity_integration:main',
         ],
     },
 )
