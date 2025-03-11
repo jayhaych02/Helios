@@ -2,12 +2,15 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>helios_description</name>
-  <version>0.0.1</version>
-  <description>Robot descriptions for Helios</description>
-  <maintainer email="your@email.com">Your Name</maintainer>
-  <license>TODO</license>
+  <version>0.0.0</version>
+  <description>Robot Type Models: Firefighter/Heavy Duty/etc... and Moving these models in Gazebo/Unity Worlds</description>
+  <maintainer email="jasenhow@gmail.com">jaych</maintainer>
+  <license>TODO: License declaration</license>
 
-  <buildtool_depend>ament_cmake</buildtool_depend>
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
 
   <depend>rclcpp</depend>
   <depend>std_msgs</depend>
@@ -25,9 +28,9 @@
   <depend>robot_state_publisher</depend>
   <depend>joint_state_publisher</depend>
   <depend>rviz2</depend>
-
   <exec_depend>ros2launch</exec_depend>
+
   <export>
-    <build_type>ament_cmake</build_type>
+    <build_type>ament_python</build_type>
   </export>
 </package>
