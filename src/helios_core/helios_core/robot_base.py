@@ -13,14 +13,14 @@ from abc import ABC, abstractmethod
 import math
 
 from std_msgs.msg import String, Float64
-from sensor_msgs.msg import Image, LaserScan
+from sensor_msgs.msg import Image, LaserScan, Imu
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import PoseStamped
 from nav2_msgs.action import NavigateToPose
 from rclpy.action import ActionClient
 from tf_transformations import euler_from_quaternion
 
-# Robot state enum
+
 class RobotState(Enum):
     IDLE = 0
     MOVING = 1
@@ -31,10 +31,7 @@ class RobotState(Enum):
 # Robot attributes class equivalent to C++ struct
 class RobotAttributes:
     def __init__(self):
-        self.robot_id = ""
         self.robot_type = ""
-        self.max_speed = 0.0
-        self.max_payload = 0.0
         self.x_pos = 0.0
         self.y_pos = 0.0
         self.theta = 0.0
@@ -78,6 +75,13 @@ class RobotBase(Node, ABC):
             Float64, 
             'gas_sensor', 
             self.gas_sensor_callback, 
+            10
+        )
+
+        self.sub_imu_sensor = self.create_subscription(
+            Imu,
+            '/imu_raw',
+            self.imu_sensor_callback,
             10
         )
         
@@ -125,6 +129,10 @@ class RobotBase(Node, ABC):
         """Handle depth camera data"""
         pass
         
+    def imu_sensor_callback(self,msg):
+        """Handle IMU sensor data"""
+        pass
+
     def gas_sensor_callback(self, msg):
         """Handle gas sensor data"""
         pass
@@ -165,7 +173,7 @@ class RobotBase(Node, ABC):
             status (str): Status message to report
         """
         msg = String()
-        msg.data = f"{self.robot_attributes.robot_id}:{self.robot_attributes.robot_type}:{status}:{self.current_environment}"
+        msg.data = f"{self.robot_attributes.robot_type}:{status}:{self.current_environment}"
         self.pub_status.publish(msg)
     
     def odom_callback(self, msg):
@@ -274,7 +282,7 @@ class RobotBase(Node, ABC):
             feedback_msg: Feedback from navigation action
         """
         feedback = feedback_msg.feedback
-        # Process feedback as needed
+        # TODO:Process feedback as needed
     
     def detect_environment(self):
         """
