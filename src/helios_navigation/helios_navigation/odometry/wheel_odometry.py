@@ -22,8 +22,6 @@ import numpy as np
 import sys
 import os
 
-# Import kinematics - adjust path as needed for your setup
-sys.path.append(os.path.join(os.path.dirname(os.path.dirname(__file__)), '..', '..'))
 from helios_utils import wheel_odom_kinematics as kn
 
 LEFT = 0
@@ -36,9 +34,12 @@ class WheelOdometry(Node):
     def __init__(self):
         super().__init__('wheel_odometry')
         
-        
         """
         # Declare parameters
+
+        TODO: Define these based on specific robot models. Publish topics w/ the robot type/count in mind
+
+
         self.declare_parameter('tb3_model', 'burger')
         self.declare_parameter('odom_frame', 'odom')
         self.declare_parameter('base_frame', 'base_footprint')
@@ -60,12 +61,11 @@ class WheelOdometry(Node):
             
         """
 
+        """Change wheel_radius & wheel_base based on the Robot 3D Models """
 
         self.wheel_radius = 0.033  # [m]
-        # Joint states data
         self.prev_joint_states = None
 
-        # QoS profile
         qos = QoSProfile(reliability=QoSReliabilityPolicy.RELIABLE,history=QoSHistoryPolicy.KEEP_LAST,depth=10)
 
         self.odom = Odometry()
