@@ -17,8 +17,16 @@ Algos
 Pending
 - Extended Kalman Filter / Unscented Kalman Filter
 
+Robot Specific Attributes for Odometry : Depend on 3D Models
+- Turning Radius
+- Wheel Radius
+- Wheel Diamater
+
+
+
 """
 
+import filterpy.kalman
 import rclpy
 from rclpy.node import Node
 from enum import Enum
@@ -26,13 +34,13 @@ from abc import ABC, abstractmethod
 import math
 
 from std_msgs.msg import String, Float64
-from sensor_msgs.msg import Image, LaserScan, Imu
+from sensor_msgs.msg import Image, LaserScan, Imu, MagneticField
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import PoseStamped
 from nav2_msgs.action import NavigateToPose
 from rclpy.action import ActionClient
 from tf_transformations import euler_from_quaternion
-
+from filterpy.kalman import KalmanFilter
 
 class RobotState(Enum):
     IDLE = 0
@@ -45,10 +53,9 @@ class RobotState(Enum):
 class RobotAttributes:
     def __init__(self):
         self.robot_type = ""
-        self.x_pos = 0.0
-        self.y_pos = 0.0
-        self.theta = 0.0
         self.robot_pose = [0.0, 0.0, 0.0]  # x, y, theta
+        self.robot_state = RobotState.IDLE
+        self.current_environment = "unknown"  # indoor, outdoor, mixed
 
 
 class RobotBase(Node, ABC):
@@ -61,13 +68,8 @@ class RobotBase(Node, ABC):
             attributes (RobotAttributes): Robot specific attributes
         """
         super().__init__(name)
-        
-        # Core attributes
+
         self.robot_attributes = attributes
-        self.robot_state = RobotState.IDLE
-        self.battery_level = 100.0
-        self.current_pose = PoseStamped()
-        self.current_environment = "unknown"  # indoor, outdoor, mixed
         
         # Core Sensors
         self.sub_lidar = self.create_subscription(
@@ -77,56 +79,47 @@ class RobotBase(Node, ABC):
             10
         )
         
+        self.sub_imu_sensor = self.create_subscription(
+            Imu,
+            '/odom/imu',
+            self.imu_sensor_callback,
+            10
+        )
+
+        self.sub_magnetometer = self.create_subscription(
+            MagneticField,
+            '/odom/magnetometer',
+            self.magnetometer_sensor_callback,
+            10
+        )
+        
         self.sub_depth_camera = self.create_subscription(
             Image, 
             'depth_camera', 
             self.depth_camera_callback, 
             10
         )
-        
-        self.sub_gas_sensor = self.create_subscription(
-            Float64, 
-            'gas_sensor', 
-            self.gas_sensor_callback, 
-            10
-        )
 
-        self.sub_imu_sensor = self.create_subscription(
-            Imu,
-            '/imu_raw',
-            self.imu_sensor_callback,
-            10
-        )
-        
-        self.sub_thermal_camera = self.create_subscription(
-            Image, 
-            'thermal_camera', 
-            self.thermal_camera_callback, 
-            10
-        )
-        
-        # Odometry and localization
         self.pub_raw_odom = self.create_publisher(
             Odometry, 
             'raw_odom', 
             10
         )
         
+        # odom after sensor fusion : IMU/ Magnetometer/Kalman Filter etc..
         self.odom_sub = self.create_subscription(
             Odometry, 
-            '/helios/odom', 
-            self.odom_callback, 
+            '/odom/sensor_fused', 
+            self.cleaned_odom_callback, 
             10
         )
         
-        # Status publisher
         self.pub_status = self.create_publisher(
             String, 
             f'/helios/robots/{name}/status', 
             10
         )
         
-        # Navigation client
         self.navigate_client = ActionClient(
             self, 
             NavigateToPose, 
@@ -137,21 +130,17 @@ class RobotBase(Node, ABC):
     def lidar_callback(self, msg):
         """Handle LIDAR data"""
         pass
-        
-    def depth_camera_callback(self, msg):
-        """Handle depth camera data"""
-        pass
-        
+
     def imu_sensor_callback(self,msg):
         """Handle IMU sensor data"""
         pass
 
-    def gas_sensor_callback(self, msg):
-        """Handle gas sensor data"""
+    def magnetometer_sensor_callback(self,msg):
+        """Handle IMU sensor data"""
         pass
-        
-    def thermal_camera_callback(self, msg):
-        """Handle thermal camera data"""
+
+    def depth_camera_callback(self, msg):
+        """Handle depth camera data"""
         pass
 
     @abstractmethod
@@ -189,7 +178,7 @@ class RobotBase(Node, ABC):
         msg.data = f"{self.robot_attributes.robot_type}:{status}:{self.current_environment}"
         self.pub_status.publish(msg)
     
-    def odom_callback(self, msg):
+    def cleaned_odom_callback(self, msg):
         """
         Handle odometry data updates
         
