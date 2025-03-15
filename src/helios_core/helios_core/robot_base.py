@@ -4,6 +4,19 @@ Abstract class that defines properties for all Robots
 - abstractmethod - MUST be implemented by derived classes
 - virtual methods - CAN be overridden by derived classes
 - Regular methods - common to all robots
+
+Guaranteed Sensors/Algorithms as of March 14 2025
+- 2D Lidar
+- IMU
+- Gyroscope
+- Magnetometer
+
+Algos
+- Kalman Filter 
+
+Pending
+- Extended Kalman Filter / Unscented Kalman Filter
+
 """
 
 import rclpy
