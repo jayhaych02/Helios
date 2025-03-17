@@ -13,11 +13,8 @@ import os
 
 import numpy as np
 
-class LaserOdometry(Node):
+class Imu(Node):
     def __init__(self):
-        super().__init__('laser_odometry')
-    
+        super().__init__('location_imu')
 
-
-
-    
+    # Robot base class subs to '/odom/imu', so publish to this topic

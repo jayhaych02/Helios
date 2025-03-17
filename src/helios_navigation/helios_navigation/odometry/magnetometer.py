@@ -13,11 +13,8 @@ import os
 
 import numpy as np
 
-class LaserOdometry(Node):
+class Magnetometer(Node):
     def __init__(self):
-        super().__init__('laser_odometry')
-    
+        super().__init__('location_magnetometer')
 
-
-
-    
+        # Robot base class subs to '/odom/magnetometer', so publish to this topic
