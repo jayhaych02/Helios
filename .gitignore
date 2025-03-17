@@ -58,3 +58,6 @@ helios_database/.env
 
 helios_database/models/__pycache__/robot.cpython-313.pyc
 helios_database/models/__pycache__/robot.cpython-313.pyc
+
+git_lfs_installation.log
+installation.log
