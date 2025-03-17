@@ -56,3 +56,5 @@ forest_fire_world.sdf
 # Database
 helios_database/.env
 
+helios_database/models/__pycache__/robot.cpython-313.pyc
+helios_database/models/__pycache__/robot.cpython-313.pyc
