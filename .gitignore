@@ -54,10 +54,12 @@ ROS2Architecture.png
 forest_fire_world.sdf
 
 # Database
-helios_database/.env
-
-helios_database/models/__pycache__/robot.cpython-313.pyc
-helios_database/models/__pycache__/robot.cpython-313.pyc
+src/helios_database/models/__pycache__/robot.cpython-313.pyc
+src/helios_database/models/__pycache__/robot.cpython-313.pyc
+src/helios_database/models/__pycache__/*.pyc
+src/helios_database/config/__pycache__/*.pyc
+src/helios_database/__pycache__/*.pyc
+src/helios_database/.env
 
 git_lfs_installation.log
 installation.log
