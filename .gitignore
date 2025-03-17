@@ -1,3 +1,9 @@
+# Problem Files
+
+GazeboRunning.png
+ROS2Architecture.png
+src/helios_gazebo/worlds/forest_fire_world.sdf
+
 # Build directories
 build/
 install/
