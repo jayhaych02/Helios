@@ -5,24 +5,14 @@ Abstract class that defines properties for all Robots
 - virtual methods - CAN be overridden by derived classes
 - Regular methods - common to all robots
 
-Guaranteed Sensors/Algorithms as of March 14 2025
-- 2D Lidar
-- IMU
-- Gyroscope
-- Magnetometer
+GAZEBO SENSORS REPO
+- https://github.com/gazebosim/gz-sensors/tree/gz-sensors9
 
-Algos
-- Kalman Filter 
+GAZEBO DIFF DRIVE
+- https://github.com/ros-simulation/gazebo_ros_pkgs/blob/ros2/gazebo_plugins/src/gazebo_ros_diff_drive.cpp
 
-Pending
-- Extended Kalman Filter / Unscented Kalman Filter
-
-Robot Specific Attributes for Odometry : Depend on 3D Models
-- Turning Radius
-- Wheel Radius
-- Wheel Diamater
-
-
+LASER ODOM
+https://www.youtube.com/watch?v=HGfJnU2p2YM
 
 """
 
@@ -34,7 +24,7 @@ from abc import ABC, abstractmethod
 import math
 
 from std_msgs.msg import String, Float64
-from sensor_msgs.msg import Image, LaserScan, Imu, MagneticField
+from sensor_msgs.msg import Image, LaserScan, Imu, MagneticField, NavSatFix
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import PoseStamped
 from nav2_msgs.action import NavigateToPose
@@ -71,77 +61,104 @@ class RobotBase(Node, ABC):
 
         self.robot_attributes = attributes
         
-        # Core Sensors
+        # Odom from Differential Drive Gazebo Plugin
+        self.sub_odom = self.create_subscription(
+            Odometry, 
+            '/odom', 
+            self.cleaned_odom_callback, 
+            10
+        )
+        # Laser odom from ros2 laser scan matcher Gazebo Plugin
+        self.sub_laser_odom = self.create_subscription(
+            Odometry, 
+            '/laser_odom', 
+            self.cleaned_odom_callback, 
+            10
+        )
+
+        # Gazebo Robot 2D LiDAR/"laser" Sensor Plugin
         self.sub_lidar = self.create_subscription(
             LaserScan, 
-            'scan', 
+            '/lidar', 
             self.lidar_callback, 
             10
         )
-        
+
+        # Gazebo Robot IMU Sensor Plugin
         self.sub_imu_sensor = self.create_subscription(
             Imu,
-            '/odom/imu',
+            '/imu',
             self.imu_sensor_callback,
             10
         )
 
-        self.sub_magnetometer = self.create_subscription(
-            MagneticField,
-            '/odom/magnetometer',
-            self.magnetometer_sensor_callback,
-            10
-        )
-        
+        # Gazebo Robot Depth Camera Sensor Plugin
         self.sub_depth_camera = self.create_subscription(
             Image, 
-            'depth_camera', 
+            '/camera/depth', 
             self.depth_camera_callback, 
             10
         )
 
+        # Gazebo NavSatSensor Plugin
+        self.sub_gps = self.create_subscription(
+            NavSatFix,
+            '/navsat',
+            self.gps_callback,
+            10
+        )
+
+        # Gazebo Magnetic Field Sensor Plugin
+        self.sub_magnetometer = self.create_subscription(
+            MagneticField,
+            '/magnetometer',
+            self.magnetometer_sensor_callback,
+            10
+        )
+
+        # Kalman Filtered precise Odom
         self.pub_raw_odom = self.create_publisher(
             Odometry, 
-            'raw_odom', 
+            'odom_fused', 
             10
         )
-        
-        # odom after sensor fusion : IMU/ Magnetometer/Kalman Filter etc..
-        self.odom_sub = self.create_subscription(
-            Odometry, 
-            '/odom/sensor_fused', 
-            self.cleaned_odom_callback, 
-            10
-        )
-        
+   
+
         self.pub_status = self.create_publisher(
             String, 
             f'/helios/robots/{name}/status', 
             10
         )
-        
+
+
         self.navigate_client = ActionClient(
             self, 
             NavigateToPose, 
             'navigate_to_pose'
         )
 
+
     # Sensor callbacks - to be implemented by derived classes
     def lidar_callback(self, msg):
         """Handle LIDAR data"""
         pass
 
-    def imu_sensor_callback(self,msg):
-        """Handle IMU sensor data"""
-        pass
-
-    def magnetometer_sensor_callback(self,msg):
+    def imu_sensor_callback(self, msg):
         """Handle IMU sensor data"""
         pass
 
     def depth_camera_callback(self, msg):
         """Handle depth camera data"""
         pass
+    def magnetometer_sensor_callback(self, msg):
+        """Handle IMU sensor data"""
+        pass
+    def gps_callback(self, msg):
+        "Handle GPS Sensor Data"
+        pass
+
+    
+
 
     @abstractmethod
     def initialize(self):
