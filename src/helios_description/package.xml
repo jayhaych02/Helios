@@ -25,6 +25,8 @@
   <depend>robot_state_publisher</depend>
   <depend>joint_state_publisher</depend>
   <depend>rviz2</depend>
+  <depend>launch</depend>
+  <depend>launch_ros</depend>
 
   <exec_depend>ros2launch</exec_depend>
   <export>

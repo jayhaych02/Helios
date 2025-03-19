@@ -18,12 +18,17 @@ install(DIRECTORY
   rviz
   urdf
   scripts
+  launch  # Added to install the launch directory
   DESTINATION share/${PROJECT_NAME}
 )
 
+# Install executables
+install(PROGRAMS
+  scripts/teleop_keyboard.cpp
+  DESTINATION lib/${PROJECT_NAME}
+)
 
-
-# Install  executables
+# Install executables (duplicate entry, consider removing)
 install(PROGRAMS
   scripts/teleop_keyboard.cpp
   DESTINATION lib/${PROJECT_NAME}

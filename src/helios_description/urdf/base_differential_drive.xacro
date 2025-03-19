@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="base_differential_drive" params="prefix">
+    <!-- Robot Properties -->
+    <xacro:property name="base_length" value="0.5" />
+    <xacro:property name="base_width" value="0.3" />
+    <xacro:property name="base_height" value="0.1" />
+    <xacro:property name="wheel_radius" value="0.05" />
+    <xacro:property name="wheel_width" value="0.04" />
+    <xacro:property name="wheel_ygap" value="0.2" />
+    <xacro:property name="wheel_xoff" value="0.15" />
+    <xacro:property name="wheel_zoff" value="0.05" />
+    <xacro:property name="caster_radius" value="0.025" />
+    <xacro:property name="caster_xoff" value="-0.15" />
+
+    <!-- Base Link -->
+    <link name="${prefix}base_link">
+      <inertial>
+        <origin xyz="0 0 ${base_height/2}" rpy="0 0 0" />
+        <mass value="5.0" />
+        <inertia ixx="0.1" ixy="0" ixz="0" iyy="0.1" iyz="0" izz="0.1" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 ${base_height/2}" rpy="0 0 0" />
+        <geometry>
+          <box size="${base_length} ${base_width} ${base_height}" />
+        </geometry>
+        <material name="silver">
+          <color rgba="0.75 0.75 0.75 1.0" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 ${base_height/2}" rpy="0 0 0" />
+        <geometry>
+          <box size="${base_length} ${base_width} ${base_height}" />
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- Left Wheel -->
+    <link name="${prefix}left_wheel">
+      <inertial>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
+        <mass value="0.5" />
+        <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_width}" />
+        </geometry>
+        <material name="black">
+          <color rgba="0.1 0.1 0.1 1.0" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_width}" />
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- Left Wheel Joint -->
+    <joint name="${prefix}left_wheel_joint" type="continuous">
+      <parent link="${prefix}base_link" />
+      <child link="${prefix}left_wheel" />
+      <origin xyz="${wheel_xoff} ${wheel_ygap} ${wheel_zoff}" rpy="0 0 0" />
+      <axis xyz="0 1 0" />
+      <dynamics damping="0.1" friction="0.1" />
+    </joint>
+
+    <!-- Right Wheel -->
+    <link name="${prefix}right_wheel">
+      <inertial>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
+        <mass value="0.5" />
+        <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_width}" />
+        </geometry>
+        <material name="black">
+          <color rgba="0.1 0.1 0.1 1.0" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_width}" />
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- Right Wheel Joint -->
+    <joint name="${prefix}right_wheel_joint" type="continuous">
+      <parent link="${prefix}base_link" />
+      <child link="${prefix}right_wheel" />
+      <origin xyz="${wheel_xoff} -${wheel_ygap} ${wheel_zoff}" rpy="0 0 0" />
+      <axis xyz="0 1 0" />
+      <dynamics damping="0.1" friction="0.1" />
+    </joint>
+
+    <!-- Caster Wheel -->
+    <link name="${prefix}caster">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0.1" />
+        <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <sphere radius="${caster_radius}" />
+        </geometry>
+        <material name="black">
+          <color rgba="0.1 0.1 0.1 1.0" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <sphere radius="${caster_radius}" />
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- Caster Joint -->
+    <joint name="${prefix}caster_joint" type="fixed">
+      <parent link="${prefix}base_link" />
+      <child link="${prefix}caster" />
+      <origin xyz="${caster_xoff} 0 ${caster_radius}" rpy="0 0 0" />
+    </joint>
+
+    <!-- Gazebo Differential Drive Plugin -->
+    <gazebo>
+      <plugin filename="ign-gazebo-diff-drive-system" name="ignition::gazebo::systems::DiffDrive">
+        <left_joint>${prefix}left_wheel_joint</left_joint>
+        <right_joint>${prefix}right_wheel_joint</right_joint>
+        <wheel_separation>${2 * wheel_ygap}</wheel_separation>
+        <wheel_radius>${wheel_radius}</wheel_radius>
+        <odom_publish_frequency>10</odom_publish_frequency>
+        <topic>/cmd_vel</topic>
+        <frame_id>odom</frame_id>
+        <child_frame_id>${prefix}base_link</child_frame_id>
+      </plugin>
+    </gazebo>
+  </xacro:macro>
+</robot>
