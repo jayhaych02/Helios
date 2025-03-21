@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="heavy_duty_robot">
+  <xacro:include filename="../base_differential_drive.xacro" />
+  <xacro:macro name="heavy_duty_robot">
+    <xacro:base_differential_drive prefix="" />
+    <!-- Material Definitions -->
+    <material name="grey">
+      <color rgba="0.5 0.5 0.5 1.0" />
+    </material>
+    <material name="black">
+      <color rgba="0.1 0.1 0.1 1.0" />
+    </material>
+    <!-- Specialized links -->
+    <link name="manipulator_base_link">
+      <inertial><origin xyz="0 0 0" rpy="0 0 0" /><mass value="5.0" /><inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" /></inertial>
+      <visual><origin xyz="0 0 0" rpy="0 0 0" /><geometry><box size="0.2 0.2 0.5" /></geometry><material name="grey" /></visual>
+      <collision><origin xyz="0 0 0" rpy="0 0 0" /><geometry><box size="0.2 0.2 0.5" /></geometry></collision>
+    </link>
+    <link name="track_left_link">
+      <inertial><origin xyz="0 0 0" rpy="0 0 0" /><mass value="2.0" /><inertia ixx="0.005" ixy="0" ixz="0" iyy="0.005" iyz="0" izz="0.005" /></inertial>
+      <visual><origin xyz="0 0 0" rpy="0 0 0" /><geometry><box size="0.1 0.3 0.05" /></geometry><material name="black" /></visual>
+      <collision><origin xyz="0 0 0" rpy="0 0 0" /><geometry><box size="0.1 0.3 0.05" /></geometry></collision>
+    </link>
+    <link name="track_right_link">
+      <inertial><origin xyz="0 0 0" rpy="0 0 0" /><mass value="2.0" /><inertia ixx="0.005" ixy="0" ixz="0" iyy="0.005" iyz="0" izz="0.005" /></inertial>
+      <visual><origin xyz="0 0 0" rpy="0 0 0" /><geometry><box size="0.1 0.3 0.05" /></geometry><material name="black" /></visual>
+      <collision><origin xyz="0 0 0" rpy="0 0 0" /><geometry><box size="0.1 0.3 0.05" /></geometry></collision>
+    </link>
+    <!-- Specialized joints -->
+    <joint name="manipulator_base_joint" type="fixed">
+      <parent link="base_link" />
+      <child link="manipulator_base_link" />
+      <origin xyz="0 0 0.1" rpy="0 0 0" />
+    </joint>
+    <joint name="track_left_joint" type="fixed">
+      <parent link="base_link" />
+      <child link="track_left_link" />
+      <origin xyz="0.15 0.2 0" rpy="0 0 0" />
+    </joint>
+    <joint name="track_right_joint" type="fixed">
+      <parent link="base_link" />
+      <child link="track_right_link" />
+      <origin xyz="0.15 -0.2 0" rpy="0 0 0" />
+    </joint>
+    <!-- Gazebo plugins (adjust for tracks) -->
+    <gazebo>
+      <plugin filename="ign-gazebo-diff-drive-system" name="ignition::gazebo::systems::DiffDrive">
+        <left_joint>track_left_joint</left_joint>
+        <right_joint>track_right_joint</right_joint>
+        <wheel_separation>0.4</wheel_separation>
+        <wheel_radius>0.1</wheel_radius>
+        <odom_publish_frequency>10</odom_publish_frequency>
+        <topic>/cmd_vel</topic>
+      </plugin>
+    </gazebo>
+  </xacro:macro>
+  <xacro:heavy_duty_robot />
+</robot>
