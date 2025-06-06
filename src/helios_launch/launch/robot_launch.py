@@ -24,7 +24,16 @@ def generate_launch_description():
         output='screen'
     )
 
+    command_tugbot = Node(
+        package='helios_control',
+        executable='tugbot_controller',
+        name='tugbot_cmdvel',
+        output='screen'
+    )
+
+    
     return LaunchDescription([
         gazebo,
-        bridge
+        bridge,
+        command_tugbot
     ])

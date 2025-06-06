@@ -5,7 +5,6 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-# find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_action REQUIRED)
@@ -13,6 +12,19 @@ find_package(nav2_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
+add_executable(tugbot_controller src/tugbot_controller.cpp)
+
+# Link the executable with the required dependencies
+ament_target_dependencies(tugbot_controller
+  rclcpp
+  geometry_msgs
+)
+
+
+install(TARGETS
+  tugbot_controller
+  DESTINATION lib/${PROJECT_NAME}
+)
 
 install(DIRECTORY config/
         DESTINATION share/${PROJECT_NAME}/config)
