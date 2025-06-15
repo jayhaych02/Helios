@@ -8,7 +8,7 @@ def generate_launch_description():
     helios_sim_share = FindPackageShare('helios_sim')
     helios_control_share = FindPackageShare('helios_control')
 
-    world_file = PathJoinSubstitution([helios_sim_share, 'worlds', 'warehouse.sdf'])
+    world_file = PathJoinSubstitution([helios_sim_share, 'worlds', 'warehouse2.sdf'])
     bridge_config = PathJoinSubstitution([helios_control_share, 'config', 'rosbridge_topics.yaml'])
 
     gazebo = ExecuteProcess(
